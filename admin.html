@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title data-i18n="app_title">Quran Recitation Logger</title>
+    <title>Quran Recitation Logger - Teacher: Ruba Rajeh</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header class="topbar">
-      <div class="title" data-i18n="app_title">Quran Recitation Logger</div>
+      <div class="title">Quran Recitation Logger - Teacher: Ruba Rajeh</div>
       <div class="spacer"></div>
       <div class="lang-controls">
         <label for="langSelect" data-i18n="language">Language</label>
@@ -123,6 +123,15 @@
           <div class="student-nav">
             <h3 data-i18n="students">Students</h3>
             <div id="studentNavList" class="student-nav-list"></div>
+
+            <div class="nav-separator"></div>
+
+            <h3 data-i18n="parent_management">Parent Management</h3>
+            <div class="parent-nav-list">
+              <button id="parentManagementBtn" class="nav-item parent-nav-item">
+                👥 Manage Parents
+              </button>
+            </div>
           </div>
 
           <div class="main-content">
@@ -161,42 +170,102 @@
                 </div>
                 <div class="form-row">
                   <label for="entryDate" data-i18n="date">Date</label>
-                  <input type="date" id="entryDate" />
+                  <div class="date-input-group">
+                    <input type="date" id="entryDate" />
+                    <button
+                      type="button"
+                      id="calendarBtn"
+                      class="calendar-btn"
+                      title="Open Calendar"
+                    >
+                      📅
+                    </button>
+                  </div>
+                  <div class="quick-date-buttons">
+                    <button type="button" class="quick-date-btn" data-days="0">
+                      Today
+                    </button>
+                    <button type="button" class="quick-date-btn" data-days="-1">
+                      Yesterday
+                    </button>
+                    <button type="button" class="quick-date-btn" data-days="-7">
+                      Last Week
+                    </button>
+                  </div>
                 </div>
                 <div class="form-row">
                   <label for="entrySura" data-i18n="sura">Sura</label>
                   <select id="entrySura"></select>
                 </div>
                 <div class="grid-2">
-                  <div class="form-row">
+                  <div class="form-row grade-input">
                     <label
                       data-i18n="personal_correction"
                       for="personalCorrection"
-                      >Personal correction</label
+                      >Personal correction (1-10)</label
                     >
-                    <input id="personalCorrection" type="text" />
+                    <input
+                      id="personalCorrection"
+                      type="number"
+                      min="1"
+                      max="10"
+                      step="0.1"
+                      placeholder="1-10"
+                    />
                   </div>
-                  <div class="form-row">
+                  <div class="form-row grade-input">
                     <label
                       data-i18n="teacher_correction"
                       for="teacherCorrection"
-                      >Teacher correction</label
+                      >Teacher correction (1-10)</label
                     >
-                    <input id="teacherCorrection" type="text" />
+                    <input
+                      id="teacherCorrection"
+                      type="number"
+                      min="1"
+                      max="10"
+                      step="0.1"
+                      placeholder="1-10"
+                    />
                   </div>
-                  <div class="form-row">
-                    <label data-i18n="tajweed" for="tajweed">Tajweed</label>
-                    <input id="tajweed" type="text" />
+                  <div class="form-row grade-input">
+                    <label data-i18n="tajweed" for="tajweed"
+                      >Tajweed (1-10)</label
+                    >
+                    <input
+                      id="tajweed"
+                      type="number"
+                      min="1"
+                      max="10"
+                      step="0.1"
+                      placeholder="1-10"
+                    />
                   </div>
-                  <div class="form-row">
-                    <label data-i18n="fluency" for="fluency">Fluency</label>
-                    <input id="fluency" type="text" />
+                  <div class="form-row grade-input">
+                    <label data-i18n="fluency" for="fluency"
+                      >Fluency (1-10)</label
+                    >
+                    <input
+                      id="fluency"
+                      type="number"
+                      min="1"
+                      max="10"
+                      step="0.1"
+                      placeholder="1-10"
+                    />
                   </div>
-                  <div class="form-row">
+                  <div class="form-row grade-input">
                     <label data-i18n="final_mark" for="finalMark"
-                      >Final mark</label
+                      >Final mark (1-10)</label
                     >
-                    <input id="finalMark" type="text" />
+                    <input
+                      id="finalMark"
+                      type="number"
+                      min="1"
+                      max="10"
+                      step="0.1"
+                      placeholder="1-10"
+                    />
                   </div>
                 </div>
                 <div class="form-row">
@@ -219,6 +288,52 @@
             <div class="pane">
               <h3 data-i18n="entries">Entries</h3>
               <div id="entriesTableWrap"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Parent Management Section -->
+        <div
+          id="parentManagementSection"
+          class="main-content"
+          style="display: none"
+        >
+          <div class="pane">
+            <h3 data-i18n="parent_management">Parent Management</h3>
+            <div class="parent-management">
+              <div class="parent-actions">
+                <button
+                  id="saveParentChangesBtn"
+                  class="primary"
+                  data-i18n="save_changes"
+                >
+                  Save Changes
+                </button>
+                <button
+                  id="refreshParentDataBtn"
+                  class="secondary"
+                  data-i18n="refresh_data"
+                >
+                  Refresh Data
+                </button>
+              </div>
+
+              <div class="parent-table-container">
+                <table id="parentManagementTable" class="parent-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="student_name">Student Name</th>
+                      <th data-i18n="parent_name">Parent Name</th>
+                      <th data-i18n="username">Username</th>
+                      <th data-i18n="password">Password</th>
+                      <th data-i18n="actions">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="parentTableBody">
+                    <!-- Parent data will be populated here -->
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

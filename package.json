@@ -1,0 +1,26 @@
+{
+  "name": "quran-recitation-logger",
+  "version": "1.0.0",
+  "description": "Quran Recitation Logger - Teacher and Parent Portal",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Build complete'",
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "quran",
+    "recitation",
+    "logger",
+    "education",
+    "teacher",
+    "parent"
+  ],
+  "author": "Ruba Rajeh",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

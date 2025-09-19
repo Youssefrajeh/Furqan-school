@@ -28,11 +28,16 @@
       final_mark: "Final mark",
       save_entry: "Save Entry",
       entries: "Entries",
-      export_json: "Export JSON",
-      import_json: "Import JSON",
       parent_portal: "Parent Portal",
       parent_credentials: "Parent Login Credentials",
       parent_portal_url: "Parent Portal URL:",
+      parent_management: "Parent Management",
+      save_changes: "Save Changes",
+      refresh_data: "Refresh Data",
+      student_name: "Student Name",
+      parent_name: "Parent Name",
+      username: "Username",
+      password: "Password",
       copy: "Copy",
       copy_link: "Copy URL",
       link_copied: "Copied to clipboard!",
@@ -83,11 +88,16 @@
       final_mark: "الدرجة النهائية",
       save_entry: "حفظ التسجيل",
       entries: "السجلات",
-      export_json: "تصدير JSON",
-      import_json: "استيراد JSON",
       parent_portal: "بوابة أولياء الأمور",
       parent_credentials: "بيانات دخول أولياء الأمور",
       parent_portal_url: "رابط بوابة أولياء الأمور:",
+      parent_management: "إدارة أولياء الأمور",
+      save_changes: "حفظ التغييرات",
+      refresh_data: "تحديث البيانات",
+      student_name: "اسم الطالب",
+      parent_name: "اسم ولي الأمر",
+      username: "اسم المستخدم",
+      password: "كلمة المرور",
       copy: "نسخ",
       copy_link: "نسخ الرابط",
       link_copied: "تم النسخ إلى الحافظة!",
@@ -171,6 +181,7 @@
     a.remove();
     URL.revokeObjectURL(url);
   }
+
 
   function generatePDFReport() {
     // Create a comprehensive report HTML
@@ -494,21 +505,21 @@
 
   function createDefaultStudents() {
     const list = [];
-    // Create students with parent assignments (DEMO VERSION - Replace with real names in production)
+    // Real student names provided by the teacher
     const students = [
-      { id: "S1", name: "Student One", parentId: "P1", parentName: "Parent One" },
-      { id: "S2", name: "Student Two", parentId: "P1", parentName: "Parent One" },
-      { id: "S3", name: "Student Three", parentId: "P2", parentName: "Parent Two" },
-      { id: "S4", name: "Student Four", parentId: "P3", parentName: "Parent Three" },
-      { id: "S5", name: "Student Five", parentId: "P4", parentName: "Parent Four" },
-      { id: "S6", name: "Student Six", parentId: "P5", parentName: "Parent Five" },
-      { id: "S7", name: "Student Seven", parentId: "P6", parentName: "Parent Six" },
-      { id: "S8", name: "Student Eight", parentId: "P7", parentName: "Parent Seven" },
-      { id: "S9", name: "Student Nine", parentId: "P8", parentName: "Parent Eight" },
-      { id: "S10", name: "Student Ten", parentId: "P9", parentName: "Parent Nine" },
-      { id: "S11", name: "Student Eleven", parentId: "P10", parentName: "Parent Ten" },
-      { id: "S12", name: "Student Twelve", parentId: "P11", parentName: "Parent Eleven" },
-      { id: "S13", name: "Student Thirteen", parentId: "P12", parentName: "Parent Twelve" }
+      { id: "S1", name: "Zakareeya A.", parentId: "P1", parentName: "Zakareeya A.'s Parent" },
+      { id: "S2", name: "Muhamad", parentId: "P2", parentName: "Muhamad's Parent" },
+      { id: "S3", name: "Mousa", parentId: "P3", parentName: "Mousa's Parent" },
+      { id: "S4", name: "Zakariya M.", parentId: "P4", parentName: "Zakariya M.'s Parent" },
+      { id: "S5", name: "Bara", parentId: "P5", parentName: "Bara's Parent" },
+      { id: "S6", name: "Ali", parentId: "P6", parentName: "Ali's Parent" },
+      { id: "S7", name: "Shorouk", parentId: "P7", parentName: "Shorouk's Parent" },
+      { id: "S8", name: "Ibrahim", parentId: "P8", parentName: "Ibrahim's Parent" },
+      { id: "S9", name: "Belal", parentId: "P9", parentName: "Belal's Parent" },
+      { id: "S10", name: "Juwariyyah", parentId: "P10", parentName: "Juwariyyah's Parent" },
+      { id: "S11", name: "Lina", parentId: "P11", parentName: "Lina's Parent" },
+      { id: "S12", name: "Jude", parentId: "P12", parentName: "Jude's Parent" },
+      { id: "S13", name: "Aminah", parentId: "P13", parentName: "Aminah's Parent" }
     ];
     return students;
   }
@@ -631,18 +642,224 @@
     { id: "114", name: "An-Nas" }
   ];
 
+  // Helper function to get Surah name from ID
+  function getSurahName(surahId) {
+    const surah = SURAS.find(s => s.id === surahId);
+    return surah ? surah.name : surahId;
+  }
+
+  // ---------------- Parent Management ----------------
+  let parentCredentials = {
+    "P1": { username: "parent1", password: "demo123" },
+    "P2": { username: "parent2", password: "demo123" },
+    "P3": { username: "parent3", password: "demo123" },
+    "P4": { username: "parent4", password: "demo123" },
+    "P5": { username: "parent5", password: "demo123" },
+    "P6": { username: "parent6", password: "demo123" },
+    "P7": { username: "parent7", password: "demo123" },
+    "P8": { username: "parent8", password: "demo123" },
+    "P9": { username: "parent9", password: "demo123" },
+    "P10": { username: "parent10", password: "demo123" },
+    "P11": { username: "parent11", password: "demo123" },
+    "P12": { username: "parent12", password: "demo123" },
+    "P13": { username: "parent13", password: "demo123" }
+  };
+
+  function renderParentManagement() {
+    const tbody = document.getElementById("parentTableBody");
+    tbody.innerHTML = "";
+
+    students.forEach(student => {
+      const row = document.createElement("tr");
+      const credentials = parentCredentials[student.parentId] || { username: "", password: "" };
+      
+      row.innerHTML = `
+        <td>${student.name}</td>
+        <td>
+          <input type="text" value="${student.parentName}" 
+                 data-field="parentName" data-parent-id="${student.parentId}" />
+        </td>
+        <td>
+          <input type="text" value="${credentials.username}" 
+                 data-field="username" data-parent-id="${student.parentId}" />
+        </td>
+        <td class="password-cell">
+          <input type="password" value="${credentials.password}" 
+                 data-field="password" data-parent-id="${student.parentId}" />
+          <button type="button" class="password-toggle-btn" onclick="toggleParentPassword(this)">
+            👁️
+          </button>
+        </td>
+        <td class="action-buttons">
+          <button type="button" class="btn-reset" onclick="resetParentCredentials('${student.parentId}')">
+            Reset
+          </button>
+        </td>
+      `;
+      
+      tbody.appendChild(row);
+    });
+  }
+
+  function toggleParentPassword(button) {
+    const input = button.previousElementSibling;
+    if (input.type === "password") {
+      input.type = "text";
+      button.textContent = "🙈";
+    } else {
+      input.type = "password";
+      button.textContent = "👁️";
+    }
+  }
+
+  function resetParentCredentials(parentId) {
+    const student = students.find(s => s.parentId === parentId);
+    if (student) {
+      const defaultCredentials = { username: `parent${parentId.slice(1)}`, password: "demo123" };
+      parentCredentials[parentId] = defaultCredentials;
+      
+      // Update the input fields
+      const row = document.querySelector(`input[data-parent-id="${parentId}"][data-field="username"]`).closest("tr");
+      row.querySelector('input[data-field="username"]').value = defaultCredentials.username;
+      row.querySelector('input[data-field="password"]').value = defaultCredentials.password;
+      
+      alert(`Reset credentials for ${student.name}'s parent to:\nUsername: ${defaultCredentials.username}\nPassword: ${defaultCredentials.password}`);
+    }
+  }
+
+  function saveParentChanges() {
+    const inputs = document.querySelectorAll('#parentTableBody input');
+    let hasChanges = false;
+
+    inputs.forEach(input => {
+      const parentId = input.getAttribute('data-parent-id');
+      const field = input.getAttribute('data-field');
+      const value = input.value.trim();
+
+      if (field === 'parentName') {
+        const student = students.find(s => s.parentId === parentId);
+        if (student && student.parentName !== value) {
+          student.parentName = value;
+          hasChanges = true;
+        }
+      } else if (field === 'username' || field === 'password') {
+        if (!parentCredentials[parentId]) {
+          parentCredentials[parentId] = {};
+        }
+        if (parentCredentials[parentId][field] !== value) {
+          parentCredentials[parentId][field] = value;
+          hasChanges = true;
+        }
+      }
+    });
+
+    if (hasChanges) {
+      saveData();
+      alert(I18N[currentLanguage].saved || "Changes saved successfully!");
+    } else {
+      alert("No changes to save.");
+    }
+  }
+
+  function showParentManagement() {
+    // Hide all main content sections
+    document.querySelectorAll('.main-content').forEach(section => {
+      section.style.display = 'none';
+    });
+    
+    // Show parent management section
+    document.getElementById('parentManagementSection').style.display = 'block';
+    
+    // Update navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    document.getElementById('parentManagementBtn').classList.add('active');
+    
+    // Render parent data
+    renderParentManagement();
+  }
+
   // ---------------- Data Persistence ----------------
-  function saveData() {
+  async function saveData() {
     const data = {
       students,
       entries: studentIdToEntries,
+      parentCredentials,
       lastSaved: new Date().toISOString()
     };
-    localStorage.setItem(DATA_KEY, JSON.stringify(data));
+    
+    try {
+      const response = await fetch('/api/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      });
+      
+      if (response.ok) {
+        console.log('Data saved successfully to JSON file');
+        // Also keep a backup in localStorage for offline access
+        localStorage.setItem(DATA_KEY, JSON.stringify(data));
+      } else {
+        console.error('Failed to save data to server');
+        // Fallback to localStorage
+        localStorage.setItem(DATA_KEY, JSON.stringify(data));
+      }
+    } catch (error) {
+      console.error('Error saving data:', error);
+      // Fallback to localStorage
+      localStorage.setItem(DATA_KEY, JSON.stringify(data));
+    }
   }
 
-  function loadData() {
+  async function loadData() {
     try {
+      // Try to load from server first
+      try {
+        const response = await fetch('/api/data');
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data.students)) {
+            students = data.students;
+          }
+          if (typeof data.entries === 'object' && data.entries !== null) {
+            studentIdToEntries = data.entries;
+          }
+          if (typeof data.parentCredentials === 'object' && data.parentCredentials !== null) {
+            parentCredentials = data.parentCredentials;
+          }
+          ensureEntryArrays();
+
+          // Force update student names to match current defaults
+          const defaultStudents = createDefaultStudents();
+          let needsUpdate = false;
+
+          students.forEach((student, index) => {
+            if (defaultStudents[index]) {
+              const newName = defaultStudents[index].name;
+              const newParentName = defaultStudents[index].parentName;
+              if (student.name !== newName || student.parentName !== newParentName) {
+                student.name = newName;
+                student.parentName = newParentName;
+                needsUpdate = true;
+              }
+            }
+          });
+
+          if (needsUpdate) {
+            await saveData(); // Save updated names immediately
+          }
+
+          console.log('Data loaded successfully from JSON file');
+          return true;
+        }
+      } catch (serverError) {
+        console.warn('Failed to load from server, trying localStorage:', serverError);
+      }
+
+      // Fallback to localStorage
       const saved = localStorage.getItem(DATA_KEY);
       if (saved) {
         const data = JSON.parse(saved);
@@ -652,7 +869,32 @@
         if (typeof data.entries === 'object' && data.entries !== null) {
           studentIdToEntries = data.entries;
         }
+        if (typeof data.parentCredentials === 'object' && data.parentCredentials !== null) {
+          parentCredentials = data.parentCredentials;
+        }
         ensureEntryArrays();
+
+        // Force update student names to match current defaults
+        const defaultStudents = createDefaultStudents();
+        let needsUpdate = false;
+
+        students.forEach((student, index) => {
+          if (defaultStudents[index]) {
+            const newName = defaultStudents[index].name;
+            const newParentName = defaultStudents[index].parentName;
+            if (student.name !== newName || student.parentName !== newParentName) {
+              student.name = newName;
+              student.parentName = newParentName;
+              needsUpdate = true;
+            }
+          }
+        });
+
+        if (needsUpdate) {
+          await saveData(); // Save updated names immediately
+        }
+
+        console.log('Data loaded from localStorage backup');
         return true;
       }
     } catch (e) {
@@ -835,8 +1077,52 @@
     }
   }
 
+  // ---------------- Validation ----------------
+  function validateEntry(entry) {
+    const errors = [];
+    
+    // Validate date
+    if (!entry.date) {
+      errors.push("Date is required");
+    } else {
+      const date = new Date(entry.date);
+      if (isNaN(date.getTime())) {
+        errors.push("Invalid date format");
+      }
+    }
+    
+    // Validate sura
+    if (!entry.sura) {
+      errors.push("Sura is required");
+    }
+    
+    // Validate grades (1-10)
+    const gradeFields = ['personalCorrection', 'teacherCorrection', 'tajweed', 'fluency', 'finalMark'];
+    gradeFields.forEach(field => {
+      const value = entry[field];
+      if (value) {
+        const numValue = parseFloat(value);
+        if (isNaN(numValue) || numValue < 1 || numValue > 10) {
+          errors.push(`${field} must be a number between 1 and 10`);
+        }
+      }
+    });
+    
+    return {
+      isValid: errors.length === 0,
+      errors: errors
+    };
+  }
+
   // ---------------- Entries ----------------
   function upsertEntry(studentId, entry) {
+    // Validate entry before saving
+    const validation = validateEntry(entry);
+    if (!validation.isValid) {
+      alert("Validation Error:\n" + validation.errors.join("\n"));
+      return false;
+    }
+    
     const list = studentIdToEntries[studentId] || (studentIdToEntries[studentId] = []);
     const existing = list.find((e) => e.date === entry.date);
     if (existing) {
@@ -846,6 +1132,7 @@
     }
     list.sort((a, b) => a.date.localeCompare(b.date));
     saveData(); // Auto-save after each entry
+    return true;
   }
 
   function renderEntriesTable(studentId) {
@@ -855,10 +1142,16 @@
       wrap.innerHTML = `<div class="no-data">${I18N[currentLanguage].no_data}</div>`;
       return;
     }
+    
+    // Get student name
+    const student = students.find(s => s.id === studentId);
+    const studentName = student ? student.name : "Unknown Student";
+    
     const t = document.createElement("table");
     const thead = document.createElement("thead");
     const hdr = document.createElement("tr");
     const keys = [
+      "student",
       "date",
       "sura",
       "personal_correction",
@@ -880,8 +1173,9 @@
       const e = entries[i];
       const tr = document.createElement("tr");
       const cols = [
+        studentName,
         e.date,
-        e.sura || "",
+        getSurahName(e.sura) || "",
         e.personalCorrection,
         e.teacherCorrection,
         e.tajweed,
@@ -1128,7 +1422,7 @@
   }
 
   // ---------------- Init & Events ----------------
-  function init() {
+  async function init() {
     // Language
     const langSelect = document.getElementById("langSelect");
     langSelect.value = currentLanguage;
@@ -1158,28 +1452,13 @@
     setupPasswordToggle("confirmPassword", "toggleConfirmPassword");
 
     // Students & default data
-    if (!loadData()) {
+    const dataLoaded = await loadData();
+    if (!dataLoaded) {
       // No saved data, create defaults
       students = createDefaultStudents();
       studentIdToEntries = {};
       ensureEntryArrays();
-      saveData(); // Save initial defaults
-    } else {
-      // Load existing data but ensure we have the correct student names
-      const defaultStudents = createDefaultStudents();
-      let needsUpdate = false;
-      
-      // Update student names if they're still generic
-      students.forEach((student, index) => {
-        if (student.name && student.name.startsWith("Student ")) {
-          student.name = defaultStudents[index]?.name || student.name;
-          needsUpdate = true;
-        }
-      });
-      
-      if (needsUpdate) {
-        saveData(); // Save updated names
-      }
+      await saveData(); // Save initial defaults
     }
     renderStudentNavigation();
     renderStudentsEditor();
@@ -1225,19 +1504,37 @@
       // Check if we're editing an existing entry
       const editingIndex = e.target.getAttribute("data-editing-index");
       if (editingIndex !== null) {
+        // Validate before updating existing entry
+        const validation = validateEntry(entry);
+        if (!validation.isValid) {
+          alert("Validation Error:\n" + validation.errors.join("\n"));
+          return;
+        }
         // Update existing entry
         studentIdToEntries[studentId][editingIndex] = entry;
         saveData(); // Auto-save after update
         cancelEdit(); // Reset form to create mode
         alert(I18N[currentLanguage].entry_updated || "Entry updated successfully!");
       } else {
-        // Create new entry
-        upsertEntry(studentId, entry);
-        alert(I18N[currentLanguage].saved);
+        // Create new entry (validation happens in upsertEntry)
+        const success = upsertEntry(studentId, entry);
+        if (success) {
+          alert(I18N[currentLanguage].saved);
+        }
       }
       
       renderEntriesTable(studentId);
     });
+    
+    // Calendar button functionality
+    document.getElementById("calendarBtn").addEventListener("click", () => {
+      const dateInput = document.getElementById("entryDate");
+      dateInput.focus();
+      dateInput.showPicker && dateInput.showPicker(); // Modern browsers
+    });
+    
+    // Quick date buttons functionality
+    setupQuickDateButtons();
     
     // Cancel edit button
     document.getElementById("cancelEditBtn").addEventListener("click", cancelEdit);
@@ -1293,7 +1590,8 @@
         "P9": { username: "parent9", password: "demo123" },
         "P10": { username: "parent10", password: "demo123" },
         "P11": { username: "parent11", password: "demo123" },
-        "P12": { username: "parent12", password: "demo123" }
+        "P12": { username: "parent12", password: "demo123" },
+        "P13": { username: "parent13", password: "demo123" }
       };
 
       const credentialsContainer = document.createElement("div");
@@ -1430,6 +1728,14 @@
         handleLogout();
       }, 1500);
     });
+
+    // Parent Management functionality
+    document.getElementById("parentManagementBtn").addEventListener("click", showParentManagement);
+    document.getElementById("saveParentChangesBtn").addEventListener("click", saveParentChanges);
+    document.getElementById("refreshParentDataBtn").addEventListener("click", () => {
+      renderParentManagement();
+      alert("Parent data refreshed!");
+    });
   }
 
   // Global function to close change password modal
@@ -1437,16 +1743,25 @@
     document.getElementById("changePasswordModal").style.display = "none";
   };
 
+  // Global functions for parent management
+  window.toggleParentPassword = toggleParentPassword;
+  window.resetParentCredentials = resetParentCredentials;
+
   // Global function to refresh student names
   window.refreshStudentNames = function() {
     const defaultStudents = createDefaultStudents();
     let needsUpdate = false;
     
-    // Update student names if they're still generic
+    // Force update all student names to match the new names
     students.forEach((student, index) => {
-      if (student.name && student.name.startsWith("Student ")) {
-        student.name = defaultStudents[index]?.name || student.name;
-        needsUpdate = true;
+      if (defaultStudents[index]) {
+        const newName = defaultStudents[index].name;
+        const newParentName = defaultStudents[index].parentName;
+        if (student.name !== newName || student.parentName !== newParentName) {
+          student.name = newName;
+          student.parentName = newParentName;
+          needsUpdate = true;
+        }
       }
     });
     

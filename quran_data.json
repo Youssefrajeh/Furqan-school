@@ -1,0 +1,181 @@
+{
+  "students": [
+    {
+      "id": "S1",
+      "name": "Zakareeya A.",
+      "parentId": "P1",
+      "parentName": "Zakareeya A.'s Parent"
+    },
+    {
+      "id": "S2",
+      "name": "Muhamad",
+      "parentId": "P2",
+      "parentName": "Muhamad's Parent"
+    },
+    {
+      "id": "S3",
+      "name": "Mousa",
+      "parentId": "P3",
+      "parentName": "Mousa's Parent"
+    },
+    {
+      "id": "S4",
+      "name": "Zakariya M.",
+      "parentId": "P4",
+      "parentName": "Zakariya M.'s Parent"
+    },
+    {
+      "id": "S5",
+      "name": "Bara",
+      "parentId": "P5",
+      "parentName": "Bara's Parent"
+    },
+    {
+      "id": "S6",
+      "name": "Ali",
+      "parentId": "P6",
+      "parentName": "Ali's Parent"
+    },
+    {
+      "id": "S7",
+      "name": "Shorouk",
+      "parentId": "P7",
+      "parentName": "Shorouk's Parent"
+    },
+    {
+      "id": "S8",
+      "name": "Ibrahim",
+      "parentId": "P8",
+      "parentName": "Ibrahim's Parent"
+    },
+    {
+      "id": "S9",
+      "name": "Belal",
+      "parentId": "P9",
+      "parentName": "Belal's Parent"
+    },
+    {
+      "id": "S10",
+      "name": "Juwariyyah",
+      "parentId": "P10",
+      "parentName": "Juwariyyah's Parent"
+    },
+    {
+      "id": "S11",
+      "name": "Lina",
+      "parentId": "P11",
+      "parentName": "Lina's Parent"
+    },
+    {
+      "id": "S12",
+      "name": "Jude",
+      "parentId": "P12",
+      "parentName": "Jude's Parent"
+    },
+    {
+      "id": "S13",
+      "name": "Aminah",
+      "parentId": "P13",
+      "parentName": "Aminah's Parent"
+    }
+  ],
+  "entries": {
+    "S3": [
+      {
+        "date": "2025-01-19",
+        "sura": "001",
+        "personalCorrection": "10",
+        "teacherCorrection": "10",
+        "tajweed": "10",
+        "fluency": "10",
+        "finalMark": "10"
+      },
+      {
+        "date": "2025-09-19",
+        "sura": "001",
+        "personalCorrection": "10",
+        "teacherCorrection": "10",
+        "tajweed": "10",
+        "fluency": "10",
+        "finalMark": "10"
+      }
+    ],
+    "S1": [],
+    "S2": [],
+    "S4": [],
+    "S5": [],
+    "S6": [
+      {
+        "date": "2025-09-19",
+        "sura": "001",
+        "personalCorrection": "10",
+        "teacherCorrection": "10",
+        "tajweed": "10",
+        "fluency": "10",
+        "finalMark": "10"
+      }
+    ],
+    "S7": [],
+    "S8": [],
+    "S9": [],
+    "S10": [],
+    "S11": [],
+    "S12": [],
+    "S13": []
+  },
+  "parentCredentials": {
+    "P1": {
+      "username": "parent1",
+      "password": "demo123"
+    },
+    "P2": {
+      "username": "parent2",
+      "password": "demo123"
+    },
+    "P3": {
+      "username": "parent3",
+      "password": "demo123"
+    },
+    "P4": {
+      "username": "parent4",
+      "password": "demo123"
+    },
+    "P5": {
+      "username": "parent5",
+      "password": "demo123"
+    },
+    "P6": {
+      "username": "parent6",
+      "password": "demo123"
+    },
+    "P7": {
+      "username": "parent7",
+      "password": "demo123"
+    },
+    "P8": {
+      "username": "parent8",
+      "password": "demo123"
+    },
+    "P9": {
+      "username": "parent9",
+      "password": "demo123"
+    },
+    "P10": {
+      "username": "parent10",
+      "password": "demo123"
+    },
+    "P11": {
+      "username": "parent11",
+      "password": "demo123"
+    },
+    "P12": {
+      "username": "parent12",
+      "password": "demo123"
+    },
+    "P13": {
+      "username": "parent13",
+      "password": "demo123"
+    }
+  },
+  "lastSaved": "2025-09-19T16:14:47.967Z"
+}

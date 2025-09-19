@@ -127,6 +127,12 @@
       <main>
         <div class="toolbar">
           <button onclick="window.print()" data-i18n="print">Print</button>
+          <button
+            onclick="refreshParentData()"
+            style="background: var(--primary); color: white"
+          >
+            Refresh Data
+          </button>
         </div>
         <section class="pane">
           <h3 id="parentName">—</h3>
@@ -201,64 +207,193 @@
           parent1: {
             password: "demo123",
             parentId: "P1",
-            name: "Parent One",
+            name: "Zakareeya A.'s Parent",
           },
           parent2: {
             password: "demo123",
             parentId: "P2",
-            name: "Parent Two",
+            name: "Muhamad's Parent",
           },
           parent3: {
             password: "demo123",
             parentId: "P3",
-            name: "Parent Three",
+            name: "Mousa's Parent",
           },
           parent4: {
             password: "demo123",
             parentId: "P4",
-            name: "Parent Four",
+            name: "Zakariya M.'s Parent",
           },
           parent5: {
             password: "demo123",
             parentId: "P5",
-            name: "Parent Five",
+            name: "Bara's Parent",
           },
           parent6: {
             password: "demo123",
             parentId: "P6",
-            name: "Parent Six",
+            name: "Ali's Parent",
           },
           parent7: {
             password: "demo123",
             parentId: "P7",
-            name: "Parent Seven",
+            name: "Shorouk's Parent",
           },
           parent8: {
             password: "demo123",
             parentId: "P8",
-            name: "Parent Eight",
+            name: "Ibrahim's Parent",
           },
           parent9: {
             password: "demo123",
             parentId: "P9",
-            name: "Parent Nine",
+            name: "Belal's Parent",
           },
           parent10: {
             password: "demo123",
             parentId: "P10",
-            name: "Parent Ten",
+            name: "Juwariyyah's Parent",
           },
           parent11: {
             password: "demo123",
             parentId: "P11",
-            name: "Parent Eleven",
+            name: "Lina's Parent",
           },
           parent12: {
             password: "demo123",
             parentId: "P12",
-            name: "Parent Twelve",
+            name: "Jude's Parent",
+          },
+          parent13: {
+            password: "demo123",
+            parentId: "P13",
+            name: "Aminah's Parent",
           },
         };
+
+        // Surah names array
+        const SURAS = [
+          { id: "001", name: "Al-Fatiha" },
+          { id: "002", name: "Al-Baqarah" },
+          { id: "003", name: "Ali 'Imran" },
+          { id: "004", name: "An-Nisa" },
+          { id: "005", name: "Al-Ma'idah" },
+          { id: "006", name: "Al-An'am" },
+          { id: "007", name: "Al-A'raf" },
+          { id: "008", name: "Al-Anfal" },
+          { id: "009", name: "At-Tawbah" },
+          { id: "010", name: "Yunus" },
+          { id: "011", name: "Hud" },
+          { id: "012", name: "Yusuf" },
+          { id: "013", name: "Ar-Ra'd" },
+          { id: "014", name: "Ibrahim" },
+          { id: "015", name: "Al-Hijr" },
+          { id: "016", name: "An-Nahl" },
+          { id: "017", name: "Al-Isra" },
+          { id: "018", name: "Al-Kahf" },
+          { id: "019", name: "Maryam" },
+          { id: "020", name: "Taha" },
+          { id: "021", name: "Al-Anbiya" },
+          { id: "022", name: "Al-Hajj" },
+          { id: "023", name: "Al-Mu'minun" },
+          { id: "024", name: "An-Nur" },
+          { id: "025", name: "Al-Furqan" },
+          { id: "026", name: "Ash-Shu'ara" },
+          { id: "027", name: "An-Naml" },
+          { id: "028", name: "Al-Qasas" },
+          { id: "029", name: "Al-'Ankabut" },
+          { id: "030", name: "Ar-Rum" },
+          { id: "031", name: "Luqman" },
+          { id: "032", name: "As-Sajdah" },
+          { id: "033", name: "Al-Ahzab" },
+          { id: "034", name: "Saba'" },
+          { id: "035", name: "Fatir" },
+          { id: "036", name: "Ya-Sin" },
+          { id: "037", name: "As-Saffat" },
+          { id: "038", name: "Sad" },
+          { id: "039", name: "Az-Zumar" },
+          { id: "040", name: "Ghafir" },
+          { id: "041", name: "Fussilat" },
+          { id: "042", name: "Ash-Shura" },
+          { id: "043", name: "Az-Zukhruf" },
+          { id: "044", name: "Ad-Dukhan" },
+          { id: "045", name: "Al-Jathiyah" },
+          { id: "046", name: "Al-Ahqaf" },
+          { id: "047", name: "Muhammad" },
+          { id: "048", name: "Al-Fath" },
+          { id: "049", name: "Al-Hujurat" },
+          { id: "050", name: "Qaf" },
+          { id: "051", name: "Adh-Dhariyat" },
+          { id: "052", name: "At-Tur" },
+          { id: "053", name: "An-Najm" },
+          { id: "054", name: "Al-Qamar" },
+          { id: "055", name: "Ar-Rahman" },
+          { id: "056", name: "Al-Waqi'ah" },
+          { id: "057", name: "Al-Hadid" },
+          { id: "058", name: "Al-Mujadila" },
+          { id: "059", name: "Al-Hashr" },
+          { id: "060", name: "Al-Mumtahanah" },
+          { id: "061", name: "As-Saff" },
+          { id: "062", name: "Al-Jumu'ah" },
+          { id: "063", name: "Al-Munafiqun" },
+          { id: "064", name: "At-Taghabun" },
+          { id: "065", name: "At-Talaq" },
+          { id: "066", name: "At-Tahrim" },
+          { id: "067", name: "Al-Mulk" },
+          { id: "068", name: "Al-Qalam" },
+          { id: "069", name: "Al-Haqqah" },
+          { id: "070", name: "Al-Ma'arij" },
+          { id: "071", name: "Nuh" },
+          { id: "072", name: "Al-Jinn" },
+          { id: "073", name: "Al-Muzzammil" },
+          { id: "074", name: "Al-Muddaththir" },
+          { id: "075", name: "Al-Qiyamah" },
+          { id: "076", name: "Al-Insan" },
+          { id: "077", name: "Al-Mursalat" },
+          { id: "078", name: "An-Naba'" },
+          { id: "079", name: "An-Nazi'at" },
+          { id: "080", name: "'Abasa" },
+          { id: "081", name: "At-Takwir" },
+          { id: "082", name: "Al-Infitar" },
+          { id: "083", name: "Al-Mutaffifin" },
+          { id: "084", name: "Al-Inshiqaq" },
+          { id: "085", name: "Al-Buruj" },
+          { id: "086", name: "At-Tariq" },
+          { id: "087", name: "Al-A'la" },
+          { id: "088", name: "Al-Ghashiyah" },
+          { id: "089", name: "Al-Fajr" },
+          { id: "090", name: "Al-Balad" },
+          { id: "091", name: "Ash-Shams" },
+          { id: "092", name: "Al-Layl" },
+          { id: "093", name: "Ad-Duha" },
+          { id: "094", name: "Ash-Sharh" },
+          { id: "095", name: "At-Tin" },
+          { id: "096", name: "Al-'Alaq" },
+          { id: "097", name: "Al-Qadr" },
+          { id: "098", name: "Al-Bayyinah" },
+          { id: "099", name: "Az-Zalzalah" },
+          { id: "100", name: "Al-'Adiyat" },
+          { id: "101", name: "Al-Qari'ah" },
+          { id: "102", name: "At-Takathur" },
+          { id: "103", name: "Al-'Asr" },
+          { id: "104", name: "Al-Humazah" },
+          { id: "105", name: "Al-Fil" },
+          { id: "106", name: "Quraysh" },
+          { id: "107", name: "Al-Ma'un" },
+          { id: "108", name: "Al-Kawthar" },
+          { id: "109", name: "Al-Kafirun" },
+          { id: "110", name: "An-Nasr" },
+          { id: "111", name: "Al-Masad" },
+          { id: "112", name: "Al-Ikhlas" },
+          { id: "113", name: "Al-Falaq" },
+          { id: "114", name: "An-Nas" },
+        ];
+
+        // Helper function to get Surah name from ID
+        function getSurahName(surahId) {
+          const surah = SURAS.find((s) => s.id === surahId);
+          return surah ? surah.name : surahId;
+        }
 
         let currentLanguage = localStorage.getItem("qrl_lang") || "en";
         let currentParent = null;
@@ -312,13 +447,67 @@
           window.location.href = "index.html";
         }
 
-        function loadParentData() {
+        async function loadParentData() {
           if (!currentParent) return;
 
           try {
+            // Try to load from server first
+            try {
+              const response = await fetch("/api/data");
+              if (response.ok) {
+                const data = await response.json();
+                console.log("Loading parent data for:", currentParent.parentId);
+                console.log("Server data:", data);
+
+                // Find all children for this parent
+                const children = data.students
+                  ? data.students.filter(
+                      (s) => s.parentId === currentParent.parentId
+                    )
+                  : [];
+
+                console.log("Found children:", children);
+
+                // Get entries for all children
+                const entries = {};
+                children.forEach((child) => {
+                  entries[child.id] = data.entries[child.id] || [];
+                  console.log(
+                    `Entries for ${child.name} (${child.id}):`,
+                    entries[child.id]
+                  );
+                });
+
+                const parentData = {
+                  parent: {
+                    name: currentParent.name,
+                    id: currentParent.parentId,
+                  },
+                  children: children,
+                  entries: entries,
+                  lang: currentLanguage,
+                  accessDenied: false,
+                };
+
+                console.log("Final parent data:", parentData);
+                render(currentLanguage, parentData);
+                return;
+              }
+            } catch (serverError) {
+              console.warn(
+                "Failed to load from server, trying localStorage:",
+                serverError
+              );
+            }
+
+            // Fallback to localStorage
             const saved = localStorage.getItem("qrl_app_data");
+            console.log("Loading parent data for:", currentParent.parentId);
+            console.log("Raw data:", saved);
+
             if (saved) {
               const data = JSON.parse(saved);
+              console.log("Parsed data:", data);
 
               // Find all children for this parent
               const children = data.students
@@ -327,10 +516,16 @@
                   )
                 : [];
 
+              console.log("Found children:", children);
+
               // Get entries for all children
               const entries = {};
               children.forEach((child) => {
                 entries[child.id] = data.entries[child.id] || [];
+                console.log(
+                  `Entries for ${child.name} (${child.id}):`,
+                  entries[child.id]
+                );
               });
 
               const parentData = {
@@ -344,7 +539,10 @@
                 accessDenied: false,
               };
 
+              console.log("Final parent data:", parentData);
               render(currentLanguage, parentData);
+            } else {
+              console.log("No saved data found in localStorage");
             }
           } catch (e) {
             console.error("Error loading parent data:", e);
@@ -402,7 +600,7 @@
                 "<tr>" +
                 [
                   e.date,
-                  e.sura || "",
+                  getSurahName(e.sura) || "",
                   e.personalCorrection,
                   e.teacherCorrection,
                   e.tajweed,
@@ -602,6 +800,45 @@
         // Global function to close change password modal
         window.closeChangePasswordModal = function () {
           document.getElementById("changePasswordModal").style.display = "none";
+        };
+
+        // Auto-refresh data every 5 seconds when logged in
+        setInterval(() => {
+          if (currentParent) {
+            loadParentData();
+          }
+        }, 5000);
+
+        // Global function to debug localStorage data
+        window.debugLocalStorage = function () {
+          const data = localStorage.getItem("qrl_app_data");
+          console.log("=== LOCALSTORAGE DEBUG ===");
+          console.log("Raw data:", data);
+          if (data) {
+            const parsed = JSON.parse(data);
+            console.log("Parsed data:", parsed);
+            console.log("Students:", parsed.students);
+            console.log("Entries:", parsed.entries);
+            if (parsed.students) {
+              const mousa = parsed.students.find((s) => s.name === "Mousa");
+              console.log("Mousa student:", mousa);
+              if (mousa) {
+                console.log("Mousa entries:", parsed.entries[mousa.id]);
+              }
+            }
+          }
+          console.log("=== END DEBUG ===");
+        };
+
+        // Global function to refresh parent data
+        window.refreshParentData = function () {
+          console.log("Manual refresh triggered");
+          if (currentParent) {
+            loadParentData();
+          } else {
+            console.log("No current parent logged in");
+            alert("Please login first");
+          }
         };
       })();
     </script>
