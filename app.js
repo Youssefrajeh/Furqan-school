@@ -22,7 +22,7 @@
       student: "Student",
       date: "Date",
       sura: "Sura",
-      personal_correction: "Teacher correction",
+      personal_correction: "Self correction",
       tajweed: "Tajweed",
       fluency: "Fluency",
       final_mark: "Final mark",
