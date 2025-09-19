@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Parent Login</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        margin: 12px 0;
+      }
+      .children-selector {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 12px 0;
+      }
+      .child-tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .child-tab {
+        padding: 8px 16px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .child-tab.active {
+        background: var(--primary);
+        color: var(--primary-contrast);
+        border-color: var(--primary);
+      }
+      .child-tab:hover:not(.active) {
+        background: #1f2937;
+      }
+      .login-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .login-box {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 400px;
+        width: 100%;
+      }
+      .login-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: var(--primary);
+      }
+      @media print {
+        .toolbar,
+        .children-selector {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Login Section -->
+    <section id="loginSection" class="login-container">
+      <div class="login-box">
+        <h2 class="login-title" data-i18n="parent_login">Parent Login</h2>
+        <div class="form-row">
+          <label data-i18n="username" for="username">Username</label>
+          <input id="username" type="text" autocomplete="username" />
+        </div>
+        <div class="form-row">
+          <label data-i18n="password" for="password">Password</label>
+          <div class="password-input-group">
+            <input
+              id="password"
+              type="password"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              id="togglePassword"
+              class="password-toggle"
+              title="Show/Hide Password"
+            >
+              👁️
+            </button>
+          </div>
+        </div>
+        <button id="loginBtn" class="primary" data-i18n="login">Login</button>
+        <div id="loginMsg" class="msg" role="status"></div>
+      </div>
+    </section>
+
+    <!-- Main App Section -->
+    <section id="appSection" style="display: none">
+      <header class="topbar">
+        <div class="title" data-i18n="parent_report_title">Parent Report</div>
+        <div class="spacer"></div>
+        <div class="lang-controls">
+          <label for="langSel" data-i18n="language">Language</label>
+          <div class="custom-select">
+            <select id="langSel">
+              <option value="en">English</option>
+              <option value="ar">العربية</option>
+            </select>
+          </div>
+        </div>
+        <button id="changePasswordBtn" data-i18n="change_password">
+          Change Password
+        </button>
+        <button id="logoutBtn" data-i18n="logout">Logout</button>
+      </header>
+      <main>
+        <div class="toolbar">
+          <button onclick="window.print()" data-i18n="print">Print</button>
+        </div>
+        <section class="pane">
+          <h3 id="parentName">—</h3>
+          <div
+            class="children-selector"
+            id="childrenSelector"
+            style="display: none"
+          >
+            <label data-i18n="select_child">Select Child:</label>
+            <div class="child-tabs" id="childTabs"></div>
+          </div>
+          <div id="tableWrap"></div>
+        </section>
+      </main>
+    </section>
+
+    <script>
+      (function () {
+        const I18N = {
+          en: {
+            parent_login: "Parent Login",
+            username: "Username",
+            password: "Password",
+            login: "Login",
+            logout: "Logout",
+            parent_report_title: "Parent Report",
+            language: "Language",
+            print: "Print",
+            select_child: "Select Child:",
+            date: "Date",
+            sura: "Sura",
+            personal_correction: "Personal correction",
+            teacher_correction: "Teacher correction",
+            tajweed: "Tajweed",
+            fluency: "Fluency",
+            final_mark: "Final mark",
+            no_data: "No data to display.",
+            invalid_credentials: "Invalid username or password.",
+            login_success: "Login successful!",
+            change_password: "Change Password",
+            current_password: "Current Password",
+            cancel: "Cancel",
+          },
+          ar: {
+            parent_login: "دخول ولي الأمر",
+            username: "اسم المستخدم",
+            password: "كلمة المرور",
+            login: "تسجيل الدخول",
+            logout: "تسجيل الخروج",
+            parent_report_title: "تقرير ولي الأمر",
+            language: "اللغة",
+            print: "طباعة",
+            select_child: "اختر الطفل:",
+            date: "التاريخ",
+            sura: "السورة",
+            personal_correction: "تصحيح شخصي",
+            teacher_correction: "تصحيح المعلم",
+            tajweed: "تجويد",
+            fluency: "طلاقة",
+            final_mark: "الدرجة النهائية",
+            no_data: "لا توجد بيانات للعرض.",
+            invalid_credentials: "اسم المستخدم أو كلمة المرور غير صحيحة.",
+            login_success: "تم تسجيل الدخول بنجاح!",
+            change_password: "تغيير كلمة المرور",
+            current_password: "كلمة المرور الحالية",
+            cancel: "إلغاء",
+          },
+        };
+
+        // Parent credentials (DEMO VERSION - Replace with real credentials in production)
+        const PARENT_CREDENTIALS = {
+          parent1: {
+            password: "demo123",
+            parentId: "P1",
+            name: "Parent One",
+          },
+          parent2: {
+            password: "demo123",
+            parentId: "P2",
+            name: "Parent Two",
+          },
+          parent3: {
+            password: "demo123",
+            parentId: "P3",
+            name: "Parent Three",
+          },
+          parent4: {
+            password: "demo123",
+            parentId: "P4",
+            name: "Parent Four",
+          },
+          parent5: {
+            password: "demo123",
+            parentId: "P5",
+            name: "Parent Five",
+          },
+          parent6: {
+            password: "demo123",
+            parentId: "P6",
+            name: "Parent Six",
+          },
+          parent7: {
+            password: "demo123",
+            parentId: "P7",
+            name: "Parent Seven",
+          },
+          parent8: {
+            password: "demo123",
+            parentId: "P8",
+            name: "Parent Eight",
+          },
+          parent9: {
+            password: "demo123",
+            parentId: "P9",
+            name: "Parent Nine",
+          },
+          parent10: {
+            password: "demo123",
+            parentId: "P10",
+            name: "Parent Ten",
+          },
+          parent11: {
+            password: "demo123",
+            parentId: "P11",
+            name: "Parent Eleven",
+          },
+          parent12: {
+            password: "demo123",
+            parentId: "P12",
+            name: "Parent Twelve",
+          },
+        };
+
+        let currentLanguage = localStorage.getItem("qrl_lang") || "en";
+        let currentParent = null;
+
+        function applyLanguage(lang) {
+          currentLanguage = lang;
+          localStorage.setItem("qrl_lang", lang);
+          document.documentElement.lang = lang;
+          document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+
+          for (const el of document.querySelectorAll("[data-i18n]")) {
+            const key = el.getAttribute("data-i18n");
+            if (I18N[lang] && I18N[lang][key]) {
+              el.textContent = I18N[lang][key];
+            }
+          }
+        }
+
+        function show(element) {
+          element.style.display = "block";
+        }
+        function hide(element) {
+          element.style.display = "none";
+        }
+
+        function handleLogin() {
+          const username = document.getElementById("username").value.trim();
+          const password = document.getElementById("password").value;
+          const msg = document.getElementById("loginMsg");
+
+          if (!username || !password) {
+            msg.textContent = I18N[currentLanguage].invalid_credentials;
+            return;
+          }
+
+          const credentials = PARENT_CREDENTIALS[username];
+          if (credentials && credentials.password === password) {
+            currentParent = credentials;
+            hide(document.getElementById("loginSection"));
+            show(document.getElementById("appSection"));
+            loadParentData();
+            msg.textContent = I18N[currentLanguage].login_success;
+          } else {
+            msg.textContent = I18N[currentLanguage].invalid_credentials;
+          }
+        }
+
+        function handleLogout() {
+          currentParent = null;
+          // Redirect to main landing page
+          window.location.href = "index.html";
+        }
+
+        function loadParentData() {
+          if (!currentParent) return;
+
+          try {
+            const saved = localStorage.getItem("qrl_app_data");
+            if (saved) {
+              const data = JSON.parse(saved);
+
+              // Find all children for this parent
+              const children = data.students
+                ? data.students.filter(
+                    (s) => s.parentId === currentParent.parentId
+                  )
+                : [];
+
+              // Get entries for all children
+              const entries = {};
+              children.forEach((child) => {
+                entries[child.id] = data.entries[child.id] || [];
+              });
+
+              const parentData = {
+                parent: {
+                  name: currentParent.name,
+                  id: currentParent.parentId,
+                },
+                children: children,
+                entries: entries,
+                lang: currentLanguage,
+                accessDenied: false,
+              };
+
+              render(currentLanguage, parentData);
+            }
+          } catch (e) {
+            console.error("Error loading parent data:", e);
+          }
+        }
+
+        function renderChildrenTabs(children, currentChildId) {
+          const tabsContainer = document.getElementById("childTabs");
+          tabsContainer.innerHTML = "";
+
+          children.forEach((child) => {
+            const tab = document.createElement("div");
+            tab.className = "child-tab";
+            if (child.id === currentChildId) tab.classList.add("active");
+            tab.textContent = child.name;
+            tab.addEventListener("click", () => {
+              // Remove active class from all tabs
+              document
+                .querySelectorAll(".child-tab")
+                .forEach((t) => t.classList.remove("active"));
+              // Add active class to clicked tab
+              tab.classList.add("active");
+              // Render table for selected child
+              renderChildTable(child.id, data.entries[child.id] || []);
+            });
+            tabsContainer.appendChild(tab);
+          });
+        }
+
+        function renderChildTable(childId, entries) {
+          const wrap = document.getElementById("tableWrap");
+          const t = I18N[currentLanguage];
+
+          if (!entries || entries.length === 0) {
+            wrap.innerHTML = '<div class="no-data">' + t.no_data + "</div>";
+            return;
+          }
+
+          const head = [
+            "date",
+            "sura",
+            "personal_correction",
+            "teacher_correction",
+            "tajweed",
+            "fluency",
+            "final_mark",
+          ];
+          let html =
+            "<table><thead><tr>" +
+            head.map((k) => "<th>" + t[k] + "</th>").join("") +
+            "</tr></thead><tbody>";
+          html += entries
+            .map(
+              (e) =>
+                "<tr>" +
+                [
+                  e.date,
+                  e.sura || "",
+                  e.personalCorrection,
+                  e.teacherCorrection,
+                  e.tajweed,
+                  e.fluency,
+                  e.finalMark,
+                ]
+                  .map((v) => "<td>" + escape(String(v)) + "</td>")
+                  .join("") +
+                "</tr>"
+            )
+            .join("");
+          html += "</tbody></table>";
+          wrap.innerHTML = html;
+        }
+
+        function render(lang, data) {
+          const t = I18N[lang];
+          document.title =
+            t.parent_report_title +
+            (data.parent?.name ? " - " + data.parent.name : "");
+          document.documentElement.lang = lang;
+          document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+          document.querySelector(".title").textContent = t.parent_report_title;
+          document.querySelector('label[for="langSel"]').textContent =
+            t.language;
+          document.querySelector(".toolbar button").textContent = t.print;
+          document.getElementById("parentName").textContent =
+            data.parent?.name || "";
+
+          const childrenSelector = document.getElementById("childrenSelector");
+          const wrap = document.getElementById("tableWrap");
+
+          if (data.accessDenied) {
+            childrenSelector.style.display = "none";
+            if (data.parent?.name === "Access Restricted") {
+              wrap.innerHTML =
+                '<div class="no-data">' + t.access_denied + "</div>";
+            } else if (data.parent?.name === "Parent Not Found") {
+              wrap.innerHTML =
+                '<div class="no-data">' + t.parent_not_found + "</div>";
+            } else {
+              wrap.innerHTML =
+                '<div class="no-data">' + t.access_denied + "</div>";
+            }
+            return;
+          }
+
+          if (data.children && data.children.length > 1) {
+            // Multiple children - show selector
+            childrenSelector.style.display = "block";
+            document.querySelector('label[for="childTabs"]').textContent =
+              t.select_child;
+            renderChildrenTabs(data.children, data.children[0].id);
+            renderChildTable(
+              data.children[0].id,
+              data.entries[data.children[0].id] || []
+            );
+          } else if (data.children && data.children.length === 1) {
+            // Single child - hide selector, show data directly
+            childrenSelector.style.display = "none";
+            renderChildTable(
+              data.children[0].id,
+              data.entries[data.children[0].id] || []
+            );
+          } else {
+            // No children
+            childrenSelector.style.display = "none";
+            wrap.innerHTML = '<div class="no-data">' + t.no_data + "</div>";
+          }
+        }
+
+        function escape(s) {
+          return s
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        // Initialize language
+        const langSel = document.getElementById("langSel");
+        langSel.value = currentLanguage;
+        langSel.addEventListener("change", () => applyLanguage(langSel.value));
+        applyLanguage(currentLanguage);
+
+        // Login functionality
+        document
+          .getElementById("loginBtn")
+          .addEventListener("click", handleLogin);
+        document
+          .getElementById("logoutBtn")
+          .addEventListener("click", handleLogout);
+
+        // Enter key support for login
+        document
+          .getElementById("username")
+          .addEventListener("keypress", (e) => {
+            if (e.key === "Enter") handleLogin();
+          });
+        document
+          .getElementById("password")
+          .addEventListener("keypress", (e) => {
+            if (e.key === "Enter") handleLogin();
+          });
+
+        // Enter key support for parent portal
+        document.addEventListener("keypress", function (e) {
+          if (e.key === "Enter" && currentParent) {
+            // Refresh data when Enter is pressed
+            loadParentData();
+          }
+        });
+
+        // Password toggle functionality
+        function setupPasswordToggle(inputId, toggleId) {
+          const input = document.getElementById(inputId);
+          const toggle = document.getElementById(toggleId);
+          if (input && toggle) {
+            toggle.addEventListener("click", () => {
+              if (input.type === "password") {
+                input.type = "text";
+                toggle.textContent = "🙈";
+              } else {
+                input.type = "password";
+                toggle.textContent = "👁️";
+              }
+            });
+          }
+        }
+
+        // Setup password toggles
+        setupPasswordToggle("password", "togglePassword");
+        setupPasswordToggle("currentPassword", "toggleCurrentPassword");
+        setupPasswordToggle("newPasswordChange", "toggleNewPasswordChange");
+        setupPasswordToggle(
+          "confirmPasswordChange",
+          "toggleConfirmPasswordChange"
+        );
+
+        // Change password functionality
+        document
+          .getElementById("changePasswordBtn")
+          .addEventListener("click", () => {
+            document.getElementById("changePasswordModal").style.display =
+              "flex";
+            document.getElementById("currentPassword").value = "";
+            document.getElementById("newPasswordChange").value = "";
+            document.getElementById("confirmPasswordChange").value = "";
+            document.getElementById("changePasswordMsg").textContent = "";
+          });
+
+        document
+          .getElementById("saveNewPasswordBtn")
+          .addEventListener("click", async () => {
+            const currentPassword =
+              document.getElementById("currentPassword").value;
+            const newPassword =
+              document.getElementById("newPasswordChange").value;
+            const confirmPassword = document.getElementById(
+              "confirmPasswordChange"
+            ).value;
+            const msg = document.getElementById("changePasswordMsg");
+
+            if (!currentPassword || !newPassword || !confirmPassword) {
+              msg.textContent = I18N[currentLanguage].invalid_credentials;
+              return;
+            }
+
+            if (newPassword !== confirmPassword) {
+              msg.textContent = I18N[currentLanguage].invalid_credentials;
+              return;
+            }
+
+            if (newPassword.length < 6) {
+              msg.textContent = I18N[currentLanguage].invalid_credentials;
+              return;
+            }
+
+            // Verify current password matches parent's password
+            const credentials = PARENT_CREDENTIALS[currentParent.username];
+            if (credentials.password !== currentPassword) {
+              msg.textContent = I18N[currentLanguage].invalid_credentials;
+              return;
+            }
+
+            // Update parent password in credentials
+            credentials.password = newPassword;
+
+            msg.textContent = I18N[currentLanguage].login_success;
+            setTimeout(() => {
+              closeChangePasswordModal();
+              handleLogout();
+            }, 1500);
+          });
+
+        // Global function to close change password modal
+        window.closeChangePasswordModal = function () {
+          document.getElementById("changePasswordModal").style.display = "none";
+        };
+      })();
+    </script>
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-i18n="change_password">Change Password</h3>
+          <button class="modal-close" onclick="closeChangePasswordModal()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <label data-i18n="current_password" for="currentPassword"
+              >Current Password</label
+            >
+            <div class="password-input-group">
+              <input
+                id="currentPassword"
+                type="password"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                id="toggleCurrentPassword"
+                class="password-toggle"
+                title="Show/Hide Password"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label data-i18n="new_password" for="newPasswordChange"
+              >New Password</label
+            >
+            <div class="password-input-group">
+              <input
+                id="newPasswordChange"
+                type="password"
+                autocomplete="new-password"
+              />
+              <button
+                type="button"
+                id="toggleNewPasswordChange"
+                class="password-toggle"
+                title="Show/Hide Password"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label data-i18n="confirm_password" for="confirmPasswordChange"
+              >Confirm New Password</label
+            >
+            <div class="password-input-group">
+              <input
+                id="confirmPasswordChange"
+                type="password"
+                autocomplete="new-password"
+              />
+              <button
+                type="button"
+                id="toggleConfirmPasswordChange"
+                class="password-toggle"
+                title="Show/Hide Password"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            id="saveNewPasswordBtn"
+            class="primary"
+            data-i18n="save_password"
+          >
+            Save Password
+          </button>
+          <button
+            onclick="closeChangePasswordModal()"
+            class="secondary"
+            data-i18n="cancel"
+          >
+            Cancel
+          </button>
+        </div>
+        <div id="changePasswordMsg" class="msg" role="status"></div>
+      </div>
+    </div>
+
+    <!-- Optional embedded data for standalone file generation:
+  <script id="data" type="application/json">{"parent":{"name":"..."},"children":[...],"entries":{...}}</script>
+  --></body>
+</html>

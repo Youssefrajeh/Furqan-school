@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quran Recitation Logger</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .landing-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .landing-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--primary);
+      }
+
+      .landing-subtitle {
+        font-size: 1.2rem;
+        color: var(--muted);
+        margin-bottom: 3rem;
+        max-width: 600px;
+      }
+
+      .access-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: 800px;
+        width: 100%;
+      }
+
+      .access-card {
+        background: var(--panel);
+        border: 2px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .access-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(22, 163, 74, 0.15);
+      }
+
+      .card-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .card-description {
+        color: var(--muted);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .card-features li {
+        padding: 0.5rem 0;
+        color: var(--text);
+        position: relative;
+        padding-left: 1.5rem;
+      }
+
+      .card-features li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+        font-weight: bold;
+      }
+
+      .lang-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--panel);
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+
+      .lang-toggle select {
+        background: transparent;
+        color: var(--text);
+        border: none;
+        font-size: 14px;
+      }
+
+      @media (max-width: 768px) {
+        .landing-title {
+          font-size: 2rem;
+        }
+
+        .access-cards {
+          grid-template-columns: 1fr;
+        }
+
+        .lang-toggle {
+          position: static;
+          margin-bottom: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="lang-toggle">
+      <label for="langSelect" data-i18n="language">Language</label>
+      <div class="custom-select">
+        <select id="langSelect">
+          <option value="en">English</option>
+          <option value="ar">العربية</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="landing-container">
+      <h1 class="landing-title" data-i18n="app_title">
+        Quran Recitation Logger
+      </h1>
+      <p class="landing-subtitle" data-i18n="landing_subtitle">
+        Choose your access level to continue
+      </p>
+
+      <div class="access-cards">
+        <a href="admin.html" class="access-card" id="adminCard">
+          <div class="card-icon">👨‍🏫</div>
+          <h2 class="card-title" data-i18n="admin_access">Admin Access</h2>
+          <p class="card-description" data-i18n="admin_description">
+            For teachers and administrators to manage student records and
+            generate reports
+          </p>
+          <ul class="card-features">
+            <li data-i18n="admin_feature1">Manage student information</li>
+            <li data-i18n="admin_feature2">Log daily recitation results</li>
+            <li data-i18n="admin_feature3">Generate parent portal links</li>
+            <li data-i18n="admin_feature4">View all student data</li>
+            <li data-i18n="admin_feature5">Export and backup data</li>
+          </ul>
+        </a>
+
+        <a href="parent.html" class="access-card" id="parentCard">
+          <div class="card-icon">👨‍👩‍👧‍👦</div>
+          <h2 class="card-title" data-i18n="parent_access">Parent Access</h2>
+          <p class="card-description" data-i18n="parent_description">
+            For parents to view their child's recitation progress and results
+          </p>
+          <ul class="card-features">
+            <li data-i18n="parent_feature1">View child's recitation history</li>
+            <li data-i18n="parent_feature2">Track progress over time</li>
+            <li data-i18n="parent_feature3">Print reports</li>
+            <li data-i18n="parent_feature4">Bilingual interface</li>
+            <li data-i18n="parent_feature5">Real-time updates</li>
+          </ul>
+        </a>
+      </div>
+
+      <div style="margin-top: 3rem; color: var(--muted); font-size: 0.9rem">
+        <p data-i18n="landing_note">
+          Parents: Please use the link provided by your child's teacher for
+          secure access
+        </p>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const I18N = {
+          en: {
+            app_title: "Quran Recitation Logger",
+            language: "Language",
+            landing_subtitle: "Choose your access level to continue",
+            admin_access: "Admin Access",
+            admin_description:
+              "For teachers and administrators to manage student records and generate reports",
+            admin_feature1: "Manage student information",
+            admin_feature2: "Log daily recitation results",
+            admin_feature3: "Generate parent portal links",
+            admin_feature4: "View all student data",
+            admin_feature5: "Export and backup data",
+            parent_access: "Parent Access",
+            parent_description:
+              "For parents to view their child's recitation progress and results",
+            parent_feature1: "View child's recitation history",
+            parent_feature2: "Track progress over time",
+            parent_feature3: "Print reports",
+            parent_feature4: "Bilingual interface",
+            parent_feature5: "Real-time updates",
+            landing_note:
+              "Parents: Please use the link provided by your child's teacher for secure access",
+          },
+          ar: {
+            app_title: "سجل تلاوة القرآن",
+            language: "اللغة",
+            landing_subtitle: "اختر مستوى الوصول للمتابعة",
+            admin_access: "وصول المدير",
+            admin_description:
+              "للمعلمين والإداريين لإدارة سجلات الطلاب وإنشاء التقارير",
+            admin_feature1: "إدارة معلومات الطلاب",
+            admin_feature2: "تسجيل نتائج التلاوة اليومية",
+            admin_feature3: "إنشاء روابط بوابة أولياء الأمور",
+            admin_feature4: "عرض بيانات جميع الطلاب",
+            admin_feature5: "تصدير ونسخ احتياطي للبيانات",
+            parent_access: "وصول ولي الأمر",
+            parent_description:
+              "لأولياء الأمور لعرض تقدم طفلهم في التلاوة والنتائج",
+            parent_feature1: "عرض تاريخ تلاوة الطفل",
+            parent_feature2: "تتبع التقدم مع الوقت",
+            parent_feature3: "طباعة التقارير",
+            parent_feature4: "واجهة ثنائية اللغة",
+            parent_feature5: "تحديثات فورية",
+            landing_note:
+              "أولياء الأمور: يرجى استخدام الرابط المقدم من معلم طفلك للوصول الآمن",
+          },
+        };
+
+        let currentLanguage = localStorage.getItem("qrl_lang") || "en";
+
+        function applyLanguage(lang) {
+          currentLanguage = lang;
+          localStorage.setItem("qrl_lang", lang);
+          document.documentElement.lang = lang;
+          document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+
+          for (const el of document.querySelectorAll("[data-i18n]")) {
+            const key = el.getAttribute("data-i18n");
+            if (I18N[lang] && I18N[lang][key]) {
+              el.textContent = I18N[lang][key];
+            }
+          }
+        }
+
+        // Initialize language
+        const langSelect = document.getElementById("langSelect");
+        langSelect.value = currentLanguage;
+        langSelect.addEventListener("change", () =>
+          applyLanguage(langSelect.value)
+        );
+        applyLanguage(currentLanguage);
+
+        // Handle parent card click - check for student parameter
+        document
+          .getElementById("parentCard")
+          .addEventListener("click", function (e) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentId = urlParams.get("student");
+
+            if (studentId) {
+              // Add student parameter to parent link for secure access
+              this.href = `parent.html?student=${studentId}`;
+            }
+            // If no student parameter, let the default link work (parent.html)
+          });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="app_title">Quran Recitation Logger</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="title" data-i18n="app_title">Quran Recitation Logger</div>
+      <div class="spacer"></div>
+      <div class="lang-controls">
+        <label for="langSelect" data-i18n="language">Language</label>
+        <div class="custom-select">
+          <select id="langSelect" aria-label="Language selector">
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="authSection">
+        <div id="setupBox" hidden>
+          <h2 data-i18n="set_password">Set Password</h2>
+          <div class="form-row">
+            <label data-i18n="new_password" for="newPassword"
+              >New Password</label
+            >
+            <div class="password-input-group">
+              <input
+                id="newPassword"
+                type="password"
+                autocomplete="new-password"
+              />
+              <button
+                type="button"
+                id="toggleNewPassword"
+                class="password-toggle"
+                title="Show/Hide Password"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label data-i18n="confirm_password" for="confirmPassword"
+              >Confirm Password</label
+            >
+            <div class="password-input-group">
+              <input
+                id="confirmPassword"
+                type="password"
+                autocomplete="new-password"
+              />
+              <button
+                type="button"
+                id="toggleConfirmPassword"
+                class="password-toggle"
+                title="Show/Hide Password"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+          <button
+            id="savePasswordBtn"
+            class="primary"
+            data-i18n="save_password"
+          >
+            Save Password
+          </button>
+          <div id="setupMsg" class="msg" role="status"></div>
+        </div>
+        <div id="loginBox" hidden>
+          <h2 data-i18n="teacher_login">Teacher Login</h2>
+          <div class="form-row">
+            <label data-i18n="enter_password" for="loginPassword"
+              >Enter Password</label
+            >
+            <div class="password-input-group">
+              <input
+                id="loginPassword"
+                type="password"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                id="toggleLoginPassword"
+                class="password-toggle"
+                title="Show/Hide Password"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+          <button id="loginBtn" class="primary" data-i18n="login">Login</button>
+          <div id="loginMsg" class="msg" role="status"></div>
+        </div>
+      </section>
+
+      <section id="appSection" hidden>
+        <div class="toolbar">
+          <button id="logoutBtn" data-i18n="logout">Logout</button>
+          <button id="printAllBtn" data-i18n="print_report">
+            Print/PDF Report
+          </button>
+          <button id="changePasswordBtn" data-i18n="change_password">
+            Change Password
+          </button>
+          <a
+            href="index.html"
+            target="_blank"
+            class="button-link"
+            data-i18n="parent_portal"
+            >Parent Portal</a
+          >
+        </div>
+
+        <div class="main-layout">
+          <div class="student-nav">
+            <h3 data-i18n="students">Students</h3>
+            <div id="studentNavList" class="student-nav-list"></div>
+          </div>
+
+          <div class="main-content">
+            <div class="pane">
+              <h3 data-i18n="students">Students</h3>
+              <div class="students">
+                <div id="studentsList" class="students-list"></div>
+                <div class="students-actions">
+                  <button id="addStudentBtn" data-i18n="add_student">
+                    Add Student
+                  </button>
+                  <button
+                    id="saveNamesBtn"
+                    class="secondary"
+                    data-i18n="save_names"
+                  >
+                    Save Names
+                  </button>
+                  <button
+                    id="refreshNamesBtn"
+                    class="secondary"
+                    onclick="refreshStudentNames()"
+                  >
+                    Refresh Names
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="pane">
+              <h3 data-i18n="daily_entry">Daily Entry</h3>
+              <form id="entryForm">
+                <div class="form-row">
+                  <label for="entryStudent" data-i18n="student">Student</label>
+                  <select id="entryStudent"></select>
+                </div>
+                <div class="form-row">
+                  <label for="entryDate" data-i18n="date">Date</label>
+                  <input type="date" id="entryDate" />
+                </div>
+                <div class="form-row">
+                  <label for="entrySura" data-i18n="sura">Sura</label>
+                  <select id="entrySura"></select>
+                </div>
+                <div class="grid-2">
+                  <div class="form-row">
+                    <label
+                      data-i18n="personal_correction"
+                      for="personalCorrection"
+                      >Personal correction</label
+                    >
+                    <input id="personalCorrection" type="text" />
+                  </div>
+                  <div class="form-row">
+                    <label
+                      data-i18n="teacher_correction"
+                      for="teacherCorrection"
+                      >Teacher correction</label
+                    >
+                    <input id="teacherCorrection" type="text" />
+                  </div>
+                  <div class="form-row">
+                    <label data-i18n="tajweed" for="tajweed">Tajweed</label>
+                    <input id="tajweed" type="text" />
+                  </div>
+                  <div class="form-row">
+                    <label data-i18n="fluency" for="fluency">Fluency</label>
+                    <input id="fluency" type="text" />
+                  </div>
+                  <div class="form-row">
+                    <label data-i18n="final_mark" for="finalMark"
+                      >Final mark</label
+                    >
+                    <input id="finalMark" type="text" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <button type="submit" class="primary" data-i18n="save_entry">
+                    Save Entry
+                  </button>
+                  <button
+                    type="button"
+                    id="cancelEditBtn"
+                    class="secondary"
+                    data-i18n="cancel"
+                    style="display: none"
+                  >
+                    Cancel Edit
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="pane">
+              <h3 data-i18n="entries">Entries</h3>
+              <div id="entriesTableWrap"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-i18n="change_password">Change Password</h3>
+          <button class="modal-close" onclick="closeChangePasswordModal()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <label data-i18n="current_password" for="currentPassword"
+              >Current Password</label
+            >
+            <div class="password-input-group">
+              <input
+                id="currentPassword"
+                type="password"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                id="toggleCurrentPassword"
+                class="password-toggle"
+                title="Show/Hide Password"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label data-i18n="new_password" for="newPasswordChange"
+              >New Password</label
+            >
+            <div class="password-input-group">
+              <input
+                id="newPasswordChange"
+                type="password"
+                autocomplete="new-password"
+              />
+              <button
+                type="button"
+                id="toggleNewPasswordChange"
+                class="password-toggle"
+                title="Show/Hide Password"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label data-i18n="confirm_password" for="confirmPasswordChange"
+              >Confirm New Password</label
+            >
+            <div class="password-input-group">
+              <input
+                id="confirmPasswordChange"
+                type="password"
+                autocomplete="new-password"
+              />
+              <button
+                type="button"
+                id="toggleConfirmPasswordChange"
+                class="password-toggle"
+                title="Show/Hide Password"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            id="saveNewPasswordBtn"
+            class="primary"
+            data-i18n="save_password"
+          >
+            Save Password
+          </button>
+          <button
+            onclick="closeChangePasswordModal()"
+            class="secondary"
+            data-i18n="cancel"
+          >
+            Cancel
+          </button>
+        </div>
+        <div id="changePasswordMsg" class="msg" role="status"></div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
